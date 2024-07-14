@@ -1,0 +1,9 @@
+*.exe
+*.tmp
+*.bak
+*.bin
+*.hex
+
+.vscode/
+.idea/
+__pycache__/
