@@ -1,9 +1,17 @@
+#binary
 *.exe
 *.tmp
 *.bak
 *.bin
 *.hex
 
+#log
+*.log
+*.xls
+*.csv
+*.xlsx
+
+# python folder
 .vscode/
 .idea/
 __pycache__/
