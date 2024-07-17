@@ -56,6 +56,9 @@ class chain(trx.trx):
     
     def close(self):
         return self.phy.close()
+    
+    def _tx(self, *args):
+        return self.phy.tx(*args)
 # -----------------------------------------------------------------------------
     def set_Bank(self, bank):
         frame_list = self.SetRegBank(BankAddr = bank)
