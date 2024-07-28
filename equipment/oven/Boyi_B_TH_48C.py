@@ -10,7 +10,9 @@
         2.    Changed the symbol in the file name
 '''
 
-import time
+import time,sys,os
+WORK_SPACE_PATH=os.path.dirname(os.path.abspath(__file__))+r'/../..'
+sys.path.append(WORK_SPACE_PATH+'/driver/')
 import phy
 
 BAUDRATE = 9600

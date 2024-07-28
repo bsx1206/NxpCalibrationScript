@@ -1,0 +1,9 @@
+{
+    "Chamber" : { "Port" : "COM8", "Type" : "aa" },
+    "Meter"   : { "Port" : "COM9", "Type" : "bb" },
+    "Target" :  { "Port" : "COM14", "Type" : "cc" },
+    "NumberOfIC" : 3,
+    
+    "LOG" : { "Path" : 0, "Level" : "INFO" },
+    "CSV" : { "Path" : ".", "TimeStamp" : 1 }
+}

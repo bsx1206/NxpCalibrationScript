@@ -1,7 +1,7 @@
 
 import sys, os, time
 from enum import Enum
-WORK_SPACE_PATH=os.path.split(os.path.realpath(__file__))[0]+r'/../..'
+WORK_SPACE_PATH=os.path.dirname(os.path.abspath(__file__))+r'/../..'
 sys.path.append(WORK_SPACE_PATH+'/driver/')
 sys.path.append(WORK_SPACE_PATH+'/equipment/')
 sys.path.append(WORK_SPACE_PATH+'/equipment/power/')
@@ -14,7 +14,7 @@ sys.path.append(WORK_SPACE_PATH+'/modules/')
 import phy, api, reg
 import LOG
 
-class ReadRegTable(Enum):
+class RREG(Enum):
     TempDieGuard  = 0xFFE2005
     TempDieMain   = 0xFFE2004
     TempCellGuard = 0xFFE2003
@@ -22,7 +22,7 @@ class ReadRegTable(Enum):
     VoltGuard     = 0xFFE2001
     VoltMain      = 0xFFE2000
 
-class ChainDev:
+class ChainDev():
     def __init__(self, name = "ChainDev", port = "COM1", target_ic_num = 1):
         self._name = name
         self._port = port
@@ -62,6 +62,9 @@ class ChainDev:
         self._enum_ic_num = 0
         return True
     
+    def KeepAlive(self):
+        self._phy.tx('sdc 1\n',delay=0.1)
+    
     def Enumerate(self):
         self._enum_ic_num = 0
         retry_count = 5
@@ -81,8 +84,8 @@ class ChainDev:
         assert None != self._UID
         return self._UID
     
-    def ReadRegister(self, reg:ReadRegTable, repeat = 1):
-        assert reg in ReadRegTable
+    def ReadRegister(self, reg:RREG, repeat = 1):
+        assert reg in RREG
         fmt_reg = f'{reg.value:07X}'
         retry_count = 5
         for retry_times in range(0, retry_count):
@@ -151,7 +154,7 @@ if __name__ == '__main__':
         sys.exit(1)
     LOG.INF("%d ICs enumerated" % cdev.GetCount())
     LOG.INF("UID:" + str(cdev.GetUID()))
-    for r in ReadRegTable:
+    for r in RREG:
         d = cdev.ReadRegister(r)
         LOG.INF(f"{r}: {d}")
     cdev.StartBalance(current_ma=18, delay_sec=130)

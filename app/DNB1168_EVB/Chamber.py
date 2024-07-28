@@ -6,19 +6,20 @@ Created on May 21, 2024
 import sys, os, time
 import threading
 
-WORK_SPACE_PATH=os.path.split(os.path.realpath(__file__))[0]+r'/../..'
+WORK_SPACE_PATH=os.path.dirname(os.path.abspath(__file__))+r'/../..'
 sys.path.append(WORK_SPACE_PATH+'/modules/')
+sys.path.append(WORK_SPACE_PATH+'/equipment/oven/')
+from Boyi_B_TH_48C import chamber
 import LOG
 from sampler import Sampler
 
 # ${WORK_SPACE_PATH}/equipment/oven/Boy_B_TH_48C.py:chamber
 class Chamber(Sampler):
-    def __init__(self, obj, name = "Chamber"):
-        assert obj != None
-        self._obj = obj
+    def __init__(self, port:str, name = "Chamber"):
+        self._obj = chamber(port)
         self._timeout = sys.maxsize
         self._temp_diff_threshold = 0.05 # Celcius
-        self._extra_delay = 30 * 60 # wait half hour if temperature meet target
+        self._extra_delay = 0
         Sampler.__init__(self, name, interval=60)
         
         self._locker.acquire()
@@ -86,3 +87,9 @@ class Chamber(Sampler):
             if self._status != Sampler.Status.SAMPLING:
                 return self._status
         return self._status
+    
+if __name__ == "__main__":
+    c = Chamber(port="COM7")
+    t = c.GetTemperature()
+    print(f"Chamber is %{t}")
+ 

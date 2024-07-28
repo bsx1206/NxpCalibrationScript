@@ -25,6 +25,7 @@ class Sampler(ABC):
         self._time_start = None
         self._time_end = None
         self._tid = None
+        self._locker = threading.RLock()
         self._sample_interval = interval # seconds
         self._delay_resolution = 0.5
         self._status = Sampler.Status.STOPPED
