@@ -19,7 +19,7 @@ sys.path.append(r'../../equipment/mux')
 sys.path.append(r'../../equipment/multimeter')
 sys.path.append(r'../../equipment/tempref')
 import phy, api, reg
-import DNS_Power
+#import DNS_Power
 import DNS_Oven
 import DNS_RelayMux
 import DNS_MultiMeter

@@ -1,4 +1,12 @@
 
+
+import math
+import configparser
+from csv import reader
+import numpy as np
+
+import platform
+
 import sys, os, time
 from enum import Enum
 WORK_SPACE_PATH=os.path.split(os.path.realpath(__file__))[0]+r'/../..'
@@ -13,6 +21,14 @@ sys.path.append(WORK_SPACE_PATH+'/equipment/counter')
 sys.path.append(WORK_SPACE_PATH+'/modules/')
 import phy, api, reg
 import LOG
+
+import phy, api, reg
+import DNS_Power
+import DNS_Oven
+import DNS_RelayMux
+import DNS_MultiMeter
+import DNS_TempRef
+
 
 class ReadRegTable(Enum):
     TempDieGuard  = 0xFFE2005
@@ -66,7 +82,7 @@ class ChainDev:
         self._enum_ic_num = 0
         retry_count = 5
         for retry_times in range(0, retry_count):
-            LOG.INF("%s try enumerating... %d/%d" % (self._name, retry_times + 1, retry_count))
+            LOGA.INF("%s try enumerating... %d/%d" % (self._name, retry_times + 1, retry_count))
             self._obj.en()
             if self._obj.linx_num >= self._target_ic_num:
                 self._enum_ic_num = self._obj.linx_num
@@ -145,6 +161,7 @@ class ChainDev:
     
 if __name__ == '__main__':
     cdev = ChainDev(port='COM27', target_ic_num=3)
+    LOGA = LOG.LOG
     cdev.Open()
     if False == cdev.Enumerate():
         LOG.ERR("Fail to enumerate")
