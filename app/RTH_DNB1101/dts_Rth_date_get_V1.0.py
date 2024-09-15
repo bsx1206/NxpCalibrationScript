@@ -4,6 +4,8 @@ Created on May 21, 2024
 @author: Jessie.Bian
 '''
 import sys, os, time, json
+import numpy as np
+
 WORK_SPACE_PATH=os.path.dirname(os.path.abspath(__file__))+'\\..\\..'
 sys.path.append(WORK_SPACE_PATH+'/modules/')
 from DigitalMeter import DigitalMeter
@@ -74,7 +76,7 @@ class Evb:
     def CreateTitle1(count:int):
         title = "Time,"
         for i in range(1, count + 1):
-            title += f" Tdg_{i},Vm_{i}, Vg_{i}, "
+            title += f" Tdg_{i},Vg_{i}, "
         return title[:-1]
     
 
@@ -209,7 +211,40 @@ def Data_Analysis(Balancevalue,Valtage):
             log.INF(f"等待时间30s,{flge}")
             time.sleep(30)
 
-  
+def MoveWindowAverage(win_size = 5, pre_sample_duration = 60, threshold_diff = 0.1):
+    def item_by_item_comparision(l):
+        new_list = list(map(list,zip(*l))) #行列转置
+        for item in new_list: #逐项比较
+            if abs(np.mean(item[:win_size]) - np.mean(item[-win_size:])) > threshold_diff:
+                return None
+        return list([ np.mean(x[-win_size:]) for x in new_list]) #返回均值
+    csv.Append(Evb.CreateTitle1(dut.GetCount() - 1))
+    # 填充列表直到满足时间窗口
+    l_window = []
+    l_ref = []
+    t_start = time.time()
+    while time.time() - t_start < pre_sample_duration:
+        l_window += [dut.ReadRegister(RREG.TempDieGuard)[1:]]
+        l_ref += [dut.ReadRegister(RREG.VoltGuard)[1:]]
+        tdg = dut.ReadRegister(RREG.TempDieGuard)[1:]
+        vg = dut.ReadRegister(RREG.VoltGuard)[1:]
+        csv.Append( [x for y in zip(tdg,vg) for x in y], timestamp=True)
+    
+    while True:
+        # 确认窗口条件是否满足
+        r = item_by_item_comparision(l_window)
+        if None != r:
+            new_list = list(map(list,zip(*l_ref))) #行列转置
+            v = list([ np.mean(x[-win_size:]) for x in new_list])
+            return r, v
+        # 移窗
+        l_window.pop(0)
+        l_ref.pop(0)
+        l_window += [dut.ReadRegister(RREG.TempDieGuard)[1:]]
+        l_ref += [dut.ReadRegister(RREG.VoltGuard)[1:]]
+        tdg = dut.ReadRegister(RREG.TempDieGuard)[1:]
+        vg = dut.ReadRegister(RREG.VoltGuard)[1:]
+        csv.Append( [x for y in zip(tdg,vg) for x in y], timestamp=True)
         
 
 def distribute_items_over_lists(data_list, n):
