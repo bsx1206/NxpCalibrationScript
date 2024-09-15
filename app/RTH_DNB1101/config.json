@@ -1,0 +1,19 @@
+{
+    "Chamber" : { "Port" : "COM9", "Type" : "aa" },
+    "Meter"   : {
+        "Keysight_34970A"   : { "Port" : "GPIB0::3::INSTR", "Type" : "Keysight_34970A" },
+        "Fluke_1524" : { "Port" : "COM11", "Type" : "Fluke_1524"},
+        "Keysight_34465A"   : { "Port" : "USB0::0x2A8D::0x0301::MY57502828::0::INSTR", "Type" : "Keysight_34465A" },
+        "Rigol_DP832A"   : { "Port" : "USB0::0x1AB1::0x0E11::DP8B173900784::0::INSTR", "Type" : "Rigol_DP832A" },
+        "None" : {}
+    },
+    "Target" :  { "Port" : "COM37", "Type" : "cc" },
+    "NumberOfIC" : 4,
+    
+    "LOG" : { "Path" : 0, "Level" : "INFO" },
+    "CSV" : { "Path" : ".", "TimeStamp" : 1 },
+
+    "SETTING" : { "BALANCE_DIFF_VALUE" : 0.1, "BALANCE_KEEP_SEC" : 1800 , "BALANCE_CURRENT" : [50] ,"BALANCE_Off_Time" : 1800,"Voltagelist":[3.5],"Templist":[30],"BALANCE_IClist":[5],"Chamber_Wtime":18}
+
+    
+}
